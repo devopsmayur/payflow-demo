@@ -1,0 +1,9 @@
+reviews:
+  post_merge_actions:
+    - name: "Update changelog"
+      enabled: true
+      prompt: "If this PR contains user-facing or behavioral changes, append a concise entry to CHANGELOG.md under the Unreleased section. Skip pure refactors, tests, and CI-only changes."
+
+    - name: "Flag payment-code change for compliance review"
+      enabled: true
+      prompt: "If this PR modifies payment processing logic (payments/charge.py, payments/refund.py, or anything under payments/), produce a short report summarizing what changed and why it may be PCI-DSS relevant (e.g. touches cardholder data flow, authorization logic, refund logic). Do not open a ticket automatically — just report."

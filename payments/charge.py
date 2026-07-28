@@ -1,3 +1,4 @@
+
 """Payment charge processing for PayFlow demo."""
 
 from dataclasses import dataclass
@@ -16,6 +17,9 @@ class ChargeResult:
     status: str
 
 
+MAX_CHARGE_AMOUNT = Decimal("10000.00")
+
+
 def charge(customer_id: str, amount: Decimal, currency: str = "USD") -> ChargeResult:
     """Charge a customer's default payment method.
 
@@ -28,10 +32,15 @@ def charge(customer_id: str, amount: Decimal, currency: str = "USD") -> ChargeRe
         ChargeResult describing the processed charge.
 
     Raises:
-        ChargeError: If the amount is invalid or the charge is declined.
+        ChargeError: If the amount is invalid, exceeds the maximum allowed,
+            or the charge is declined.
     """
     if amount <= 0:
         raise ChargeError(f"Charge amount must be positive, got {amount}")
+    if amount > MAX_CHARGE_AMOUNT:
+        raise ChargeError(
+            f"Charge amount {amount} exceeds maximum allowed {MAX_CHARGE_AMOUNT}"
+        )
 
     # In production this calls out to the payment gateway.
     charge_id = f"ch_{customer_id}_{int(amount * 100)}"
@@ -42,3 +51,4 @@ def charge(customer_id: str, amount: Decimal, currency: str = "USD") -> ChargeRe
         currency=currency,
         status="succeeded",
     )
+EOF
